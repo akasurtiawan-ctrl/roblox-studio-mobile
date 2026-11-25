@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roblox Studio Mobile</title>
+<style>
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:#17191e;
+  color:white;
+  font-family:Arial,sans-serif;
+}
+header {
+  height:48px;
+  background:#252830;
+  display:flex;
+  align-items:center;
+  padding:0 12px;
+  gap:12px;
+}
+header strong { color:#f5f5f5; }
+.toolbar {
+  background:#30343d;
+  padding:9px;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+button {
+  background:#414753;
+  border:1px solid #596170;
+  color:white;
+  border-radius:5px;
+  padding:9px 13px;
+}
+button:active { background:#e0a526; }
+#workspace {
+  height:55vh;
+  background:#111820;
+  position:relative;
+}
+#panels {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  padding:8px;
+}
+.panel {
+  background:#252830;
+  padding:10px;
+  border-radius:6px;
+  min-height:125px;
+}
+.panel h3 {
+  margin:0 0 10px;
+  font-size:14px;
+}
+#objects div {
+  padding:6px;
+  border-bottom:1px solid #414753;
+  font-size:13px;
+}
+input {
+  width:100%;
+  background:#17191e;
+  color:white;
+  border:1px solid #596170;
+  padding:7px;
+  margin:4px 0 8px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <strong>ROBLOX STUDIO</strong>
+  <span>Mobile</span>
+</header>
+
+<div class="toolbar">
+  <button onclick="addPart()">+ Part</button>
+  <button onclick="addModel()">+ Model</button>
+  <button onclick="removePart()">Delete</button>
+</div>
+
+<div id="workspace"></div>
+
+<div id="panels">
+  <div class="panel">
+    <h3>Explorer</h3>
+    <div id="objects">Workspace</div>
+  </div>
+
+  <div class="panel">
+    <h3>Properties</h3>
+    <label>Name</label>
+    <input id="objectName" placeholder="Object name">
+    <label>Color</label>
+    <input id="objectColor" type="color" value="#00aaff">
+    <button onclick="applyProperties()">Apply</button>
+  </div>
+</div>
+
+<script>
+let objects = [];
+let selected = -1;
+
+function refresh() {
+  const list = document.getElementById("objects");
+  list.innerHTML = "Workspace";
+
+  objects.forEach((obj,i) => {
+    const item = document.createElement("div");
+    item.textContent = (selected === i ? "▶ " : "") + obj.name;
+    item.onclick = () => selectObject(i);
+    list.appendChild(item);
+  });
+}
+
+function addPart() {
+  objects.push({
+    name:"Part",
+    color:"#00aaff",
+    type:"Part"
+  });
+  selectObject(objects.length-1);
+}
+
+function addModel() {
+  objects.push({
+    name:"Model",
+    color:"#aaaaaa",
+    type:"Model"
+  });
+  selectObject(objects.length-1);
+}
+
+function selectObject(i) {
+  selected = i;
+  document.getElementById("objectName").value =
+    objects[i].name;
+  document.getElementById("objectColor").value =
+    objects[i].color;
+  refresh();
+}
+
+function removePart() {
+  if(selected < 0) return;
+  objects.splice(selected,1);
+  selected = -1;
+  refresh();
+}
+
+function applyProperties() {
+  if(selected < 0) return;
+  objects[selected].name =
+    document.getElementById("objectName").value;
+  objects[selected].color =
+    document.getElementById("objectColor").value;
+  refresh();
+}
+</script>
+
+</body>
+</html>
